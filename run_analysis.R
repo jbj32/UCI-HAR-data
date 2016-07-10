@@ -47,3 +47,11 @@ tidy_data <-  raw_data %>%
               mutate(domain = str_replace(domain, "f", "freq")) %>%
               right_join(tbl_df(label_factors), by="label") %>%
               select(-label)
+
+# Aggregate the tidied data into a second data set
+aggregate_data <- tidy_data %>%
+  group_by(subject_ID, state, domain, source, metric, aggregate, axis) %>%
+  summarise_each(funs(mean))
+
+# Save the data into the file
+write.table(aggregate_data, file="aggregate_data.txt", row.name=FALSE)
